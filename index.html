@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="搭浮桥是一款多人在线策略棋盘游戏。选择岛屿、移动工人、搭建浮桥，用最短路径连接所有目标岛屿赢得胜利！支持2-4人对战。"
+    />
+    <meta
+      name="keywords"
+      content="搭浮桥,策略游戏,棋盘游戏,多人游戏,在线游戏,益智游戏,HTML5游戏"
+    />
+    <meta name="author" content="搭浮桥游戏团队" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#4a90d9" />
+    <link rel="canonical" href="https://example.com/bridge-game/" />
+    <title>搭浮桥 - 多人在线策略棋盘游戏 | 免费即玩</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://example.com/bridge-game/" />
+    <meta property="og:title" content="搭浮桥 - 多人在线策略棋盘游戏" />
+    <meta
+      property="og:description"
+      content="选择岛屿、移动工人、搭建浮桥，用最短路径连接所有目标岛屿赢得胜利！支持2-4人对战的策略棋盘游戏。"
+    />
+    <meta
+      property="og:image"
+      content="https://example.com/bridge-game/images/og-image.png"
+    />
+    <meta property="og:locale" content="zh_CN" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://example.com/bridge-game/" />
+    <meta property="twitter:title" content="搭浮桥 - 多人在线策略棋盘游戏" />
+    <meta
+      property="twitter:description"
+      content="选择岛屿、移动工人、搭建浮桥，用最短路径连接所有目标岛屿赢得胜利！支持2-4人对战。"
+    />
+    <meta
+      property="twitter:image"
+      content="https://example.com/bridge-game/images/og-image.png"
+    />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Game",
+        "name": "搭浮桥",
+        "description": "一款多人在线策略棋盘游戏。选择岛屿、移动工人、搭建浮桥，用最短路径连接所有目标岛屿赢得胜利！",
+        "genre": ["策略游戏", "棋盘游戏", "多人游戏"],
+        "gameItem": ["岛屿", "浮桥", "工人"],
+        "numberOfPlayers": {
+          "@type": "QuantitativeValue",
+          "minValue": 2,
+          "maxValue": 4
+        },
+        "playMode": "MultiPlayer",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires HTML5 support",
+        "inLanguage": "zh-CN",
+        "isAccessibleForFree": true,
+        "url": "https://example.com/bridge-game/"
+      }
+    </script>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- 游戏设置页面 -->
+      <div id="setup-screen" class="screen active">
+        <div class="setup-container">
+          <h1 class="game-title">🏝️ 搭浮桥</h1>
+          <p class="game-subtitle">连接岛屿，赢得胜利！</p>
+
+          <div class="setup-section">
+            <h2>选择玩家人数</h2>
+            <div class="player-selector">
+              <button class="player-btn" data-count="2">2 人</button>
+              <button class="player-btn" data-count="3">3 人</button>
+              <button class="player-btn" data-count="4">4 人</button>
+            </div>
+          </div>
+
+          <div class="setup-section game-rules-preview">
+            <h2>游戏规则</h2>
+            <ul>
+              <li>每玩家选择自己的岛屿（一人一个轮流选择）</li>
+              <li>玩家自行决定起始岛屿</li>
+              <li>工人每回合可移动 2 步或搭建 1 格浮桥</li>
+              <li>目标：用浮桥连接所有目标岛屿</li>
+              <li>最先连通所有岛屿的玩家获胜</li>
+            </ul>
+          </div>
+
+          <button id="start-btn" class="start-btn" disabled>开始游戏</button>
+        </div>
+      </div>
+
+      <!-- 岛屿选择页面 -->
+      <div id="selection-screen" class="screen">
+        <div class="game-header">
+          <div class="game-info">
+            <span class="phase-tag" id="selection-phase-tag">选择岛屿阶段</span>
+            <span class="current-player"
+              >当前选择: <span id="selecting-player-name">-</span></span
+            >
+            <span class="turn-info"
+              >进度: <span id="selection-progress">0/0</span></span
+            >
+          </div>
+        </div>
+
+        <div class="game-main">
+          <div class="board-container">
+            <div id="selection-board" class="board"></div>
+          </div>
+
+          <div class="side-panel">
+            <div class="panel-section">
+              <h3>选择说明</h3>
+              <div id="selection-hint" class="action-hint">
+                请点击一个未被选择的岛屿
+              </div>
+            </div>
+
+            <div class="panel-section">
+              <h3>玩家已选岛屿</h3>
+              <div id="player-islands-list" class="player-islands-list"></div>
+            </div>
+
+            <div
+              class="panel-section"
+              id="start-island-section"
+              style="display: none"
+            >
+              <h3>起始岛屿</h3>
+              <div id="start-island-hint" class="action-hint">
+                请点击你的岛屿设置为起始岛屿
+              </div>
+              <div id="player-start-islands" class="target-islands"></div>
+              <button
+                id="confirm-start-island-btn"
+                class="action-btn"
+                style="margin-top: 10px; width: 100%"
+              >
+                确认起始岛屿
+              </button>
+            </div>
+
+            <div class="panel-section">
+              <h3>选择进度</h3>
+              <div class="selection-status">
+                <div id="selection-round">第 1 轮选择</div>
+                <div id="selection-order">顺序: 玩家1 → 玩家2 → ...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 游戏主页面 -->
+      <div id="game-screen" class="screen">
+        <div class="game-header">
+          <div class="game-info">
+            <span class="phase-tag phase-playing" id="game-phase-tag"
+              >游戏阶段</span
+            >
+            <span class="current-player"
+              >当前玩家: <span id="player-name">-</span></span
+            >
+            <span class="turn-info"
+              >第 <span id="turn-count">1</span> 回合</span
+            >
+          </div>
+          <button id="end-turn-btn" class="action-btn">结束回合</button>
+        </div>
+
+        <div class="game-main">
+          <div class="board-container">
+            <div id="board" class="board"></div>
+          </div>
+
+          <div class="side-panel">
+            <div class="panel-section">
+              <h3>操作说明</h3>
+              <div id="action-hint" class="action-hint">点击工人进行选择</div>
+            </div>
+
+            <div class="panel-section">
+              <h3>工人状态</h3>
+              <div id="worker-status" class="worker-status">
+                <div class="worker-item" data-worker="0">
+                  <span class="worker-label">工人 1</span>
+                  <span class="worker-action">未行动</span>
+                </div>
+                <div class="worker-item" data-worker="1">
+                  <span class="worker-label">工人 2</span>
+                  <span class="worker-action">未行动</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-section">
+              <h3>目标岛屿</h3>
+              <div id="target-islands" class="target-islands"></div>
+            </div>
+
+            <div class="panel-section">
+              <h3>操作提示</h3>
+              <div class="action-tips">
+                <div class="tip-item">
+                  <span class="tip-color move-tip"></span>
+                  <span>蓝色：可移动位置</span>
+                </div>
+                <div class="tip-item">
+                  <span class="tip-color build-tip"></span>
+                  <span>紫色：可搭桥位置</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 游戏结束页面 -->
+      <div id="end-screen" class="screen">
+        <div class="end-container">
+          <h1 class="end-title">🎉 游戏结束</h1>
+          <div class="winner-info">
+            <p class="winner-text">获胜者: <span id="winner-name">-</span></p>
+            <p class="winner-stats">用时: <span id="game-stats">-</span></p>
+          </div>
+          <div class="end-actions">
+            <button id="restart-btn" class="start-btn">重新开始</button>
+            <button id="back-to-setup-btn" class="mode-btn secondary">
+              返回设置
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/board.js"></script>
+    <script src="js/island.js"></script>
+    <script src="js/bridge.js"></script>
+    <script src="js/worker.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+      // 初始化游戏
+      document.addEventListener("DOMContentLoaded", () => {
+        const ui = new UI()
+      })
+    </script>
+  </body>
+</html>

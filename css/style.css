@@ -1,0 +1,741 @@
+/* 基础样式 */
+:root {
+  --ocean-blue: #3b82f6;
+  --sand-gold: #f59e0b;
+  --ocean-light: #e0f2fe;
+  --island-green: #10b981;
+  --bridge-brown: #8b5cf6;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --bg-white: #ffffff;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* 玩家颜色 */
+  --player-1: #ef4444;
+  --player-2: #3b82f6;
+  --player-3: #10b981;
+  --player-4: #f59e0b;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, var(--ocean-light) 0%, #bfdbfe 100%);
+  min-height: 100vh;
+  color: var(--text-dark);
+}
+
+/* 屏幕切换 */
+.screen {
+  display: none;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.screen.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 设置页面 */
+.setup-container {
+  background: var(--bg-white);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: var(--shadow-lg);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.game-title {
+  font-size: 2.5rem;
+  color: var(--ocean-blue);
+  margin-bottom: 10px;
+}
+
+.game-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  margin-bottom: 30px;
+}
+
+.setup-section {
+  margin-bottom: 30px;
+}
+
+.setup-section h2 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: var(--text-dark);
+}
+
+.player-selector {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.player-btn {
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  border: 2px solid var(--ocean-blue);
+  background: var(--bg-white);
+  color: var(--ocean-blue);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.player-btn:hover {
+  background: var(--ocean-blue);
+  color: var(--bg-white);
+}
+
+.player-btn.selected {
+  background: var(--ocean-blue);
+  color: var(--bg-white);
+}
+
+.game-rules-preview {
+  background: var(--ocean-light);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.game-rules-preview ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.game-rules-preview li {
+  padding: 8px 0;
+  padding-left: 25px;
+  position: relative;
+}
+
+.game-rules-preview li::before {
+  content: "📋";
+  position: absolute;
+  left: 0;
+}
+
+.start-btn {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2rem;
+  background: var(--ocean-blue);
+  color: var(--bg-white);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.start-btn:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.start-btn:disabled {
+  background: var(--text-light);
+  cursor: not-allowed;
+}
+
+/* 选择阶段页面 */
+#selection-screen {
+  flex-direction: column;
+  padding: 10px;
+}
+
+#selection-screen .game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-white);
+  padding: 15px 25px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin-bottom: 15px;
+  width: 100%;
+  max-width: 1400px;
+}
+
+#selection-screen .game-info {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+/* 阶段标签样式 */
+.phase-tag {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--sand-gold);
+  color: var(--bg-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.phase-tag.phase-playing {
+  background: var(--island-green);
+}
+
+#selecting-player-name {
+  padding: 5px 15px;
+  border-radius: 20px;
+  color: var(--bg-white);
+  font-weight: 600;
+}
+
+#selection-progress {
+  font-weight: 600;
+  color: var(--ocean-blue);
+}
+
+#selection-board {
+  display: grid;
+  gap: 2px;
+  background: #bfdbfe;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+#selection-board .cell.island {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#selection-board .cell.island:hover:not(.selected-island) {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#selection-board .cell.island.selected-island {
+  border: 3px solid var(--bg-white);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.player-islands-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.player-island-item {
+  background: var(--ocean-light);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.selection-status {
+  background: var(--ocean-light);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+#selection-round {
+  font-weight: 600;
+  color: var(--ocean-blue);
+  margin-bottom: 5px;
+}
+
+#selection-order {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+#start-island-section {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 10px;
+  padding: 15px;
+  border: 2px solid var(--sand-gold);
+}
+
+#start-island-section h3 {
+  color: var(--sand-gold);
+  border-bottom-color: var(--sand-gold);
+}
+
+/* 游戏页面 */
+#game-screen {
+  flex-direction: column;
+  padding: 10px;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-white);
+  padding: 15px 25px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin-bottom: 15px;
+  width: 100%;
+  max-width: 1400px;
+}
+
+.game-info {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.current-player {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+#player-name {
+  padding: 5px 15px;
+  border-radius: 20px;
+  color: var(--bg-white);
+}
+
+.turn-info {
+  color: var(--text-light);
+}
+
+.action-btn {
+  padding: 10px 25px;
+  background: var(--island-green);
+  color: var(--bg-white);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  background: #059669;
+}
+
+.game-main {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+  flex: 1;
+}
+
+.board-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-white);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  max-width: 100%;
+  overflow: auto;
+}
+
+.board {
+  display: grid;
+  gap: 2px;
+  background: #bfdbfe;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  background: var(--ocean-light);
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.cell:hover {
+  background: #93c5fd;
+}
+
+.cell.island {
+  background: var(--island-green);
+  border-radius: 50%;
+}
+
+.cell.island::after {
+  content: attr(data-id);
+  color: var(--bg-white);
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* 玩家岛屿样式 */
+.cell.player-1-island {
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+.cell.player-2-island {
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+.cell.player-3-island {
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+.cell.player-4-island {
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+/* 起始岛屿样式 - 金色星标 */
+.cell.start-island {
+  position: relative;
+}
+
+.cell.start-island::before {
+  content: "★";
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  background: var(--sand-gold);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--bg-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 5;
+}
+
+/* 已联通岛屿样式 - 对勾标记 */
+.cell.connected-island {
+  position: relative;
+}
+
+.cell.connected-island::after {
+  content: "✓";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  background: var(--ocean-blue);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+  color: var(--bg-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 5;
+}
+
+.cell.bridge {
+  background: var(--bridge-brown);
+}
+
+.cell.valid-move {
+  background: rgba(59, 130, 246, 0.5);
+  animation: pulse 1.5s infinite;
+}
+
+.cell.valid-build {
+  background: rgba(139, 92, 246, 0.5);
+  animation: pulse 1.5s infinite;
+}
+
+.cell.selected {
+  box-shadow: 0 0 0 3px var(--sand-gold);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* 工人样式 */
+.worker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  position: absolute;
+  border: 2px solid var(--bg-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.worker.player-1 {
+  background: var(--player-1);
+}
+.worker.player-2 {
+  background: var(--player-2);
+}
+.worker.player-3 {
+  background: var(--player-3);
+}
+.worker.player-4 {
+  background: var(--player-4);
+}
+
+.worker::after {
+  content: attr(data-id);
+  color: var(--bg-white);
+  font-size: 0.7rem;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.worker.selected {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 4px var(--sand-gold);
+}
+
+/* 侧边面板 */
+.side-panel {
+  width: 280px;
+  background: var(--bg-white);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel-section h3 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: var(--text-dark);
+  border-bottom: 2px solid var(--ocean-light);
+  padding-bottom: 8px;
+}
+
+.action-hint {
+  background: var(--ocean-light);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+}
+
+.worker-status {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.worker-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: var(--ocean-light);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.worker-item:hover:not(.acted) {
+  background: #bfdbfe;
+  transform: translateX(4px);
+}
+
+.worker-item.selected {
+  background: var(--sand-gold);
+  box-shadow: 0 0 0 2px var(--sand-gold);
+}
+
+.worker-item.acted {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.worker-action {
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+.worker-item.acted .worker-action {
+  color: var(--island-green);
+}
+
+.target-islands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.island-tag {
+  padding: 6px 12px;
+  background: var(--island-green);
+  color: var(--bg-white);
+  border-radius: 15px;
+  font-size: 0.85rem;
+  display: inline-block;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+
+.island-tag.connected {
+  background: var(--ocean-blue);
+}
+
+.island-tag.start {
+  background: var(--sand-gold);
+  font-weight: bold;
+}
+
+.action-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tip-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.tip-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+
+.tip-color.move-tip {
+  background: rgba(59, 130, 246, 0.5);
+  border-color: #3b82f6;
+}
+
+.tip-color.build-tip {
+  background: rgba(139, 92, 246, 0.5);
+  border-color: #8b5cf6;
+}
+
+/* 结束页面 */
+.end-container {
+  background: var(--bg-white);
+  border-radius: 20px;
+  padding: 50px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.end-title {
+  font-size: 2.5rem;
+  color: var(--island-green);
+  margin-bottom: 30px;
+}
+
+.winner-info {
+  margin-bottom: 40px;
+}
+
+.winner-text {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+#winner-name {
+  font-weight: bold;
+  color: var(--ocean-blue);
+}
+
+.winner-stats {
+  color: var(--text-light);
+  font-size: 1.1rem;
+}
+
+.end-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .game-main {
+    flex-direction: column;
+  }
+
+  .side-panel {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .panel-section {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .board-container {
+    padding: 10px;
+  }
+
+  .cell {
+    width: 22px;
+    height: 22px;
+  }
+
+  .worker {
+    width: 14px;
+    height: 14px;
+    border-width: 1px;
+  }
+
+  .worker::after {
+    font-size: 0.5rem;
+  }
+
+  .cell.island::after {
+    font-size: 0.65rem;
+  }
+
+  .game-header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 15px;
+  }
+
+  .game-info {
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+  }
+
+  .side-panel {
+    padding: 15px;
+  }
+
+  .panel-section h3 {
+    font-size: 0.9rem;
+  }
+}
