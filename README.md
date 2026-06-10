@@ -1,5 +1,9 @@
 # 搭浮桥
 
+## 在线体验
+
+🎮 **立即试玩**: [https://bridge.bestzks.com/](https://bridge.bestzks.com/)
+
 ## 游戏规则
 
 > 1. 游戏开始时, 裁判选定一些目标岛屿
